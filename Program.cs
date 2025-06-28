@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Messaging;
 
 namespace ConsoleApp2
 {
@@ -45,11 +46,15 @@ namespace ConsoleApp2
                 }
 
                 reader.Close();
-                connection.Close();
             
-            } catch (Exception ex)
+            } 
+            catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
@@ -92,12 +97,15 @@ namespace ConsoleApp2
                 }
 
                 reader.Close();
-                connection.Close();
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
         }
 
@@ -157,11 +165,13 @@ namespace ConsoleApp2
                     firstName = result.ToString();
                 }
 
-                connection.Close();
-
             } catch (Exception ex)
             {
                 Console.WriteLine("ERROR: ", ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
 
             return firstName;
@@ -207,16 +217,20 @@ namespace ConsoleApp2
                 }
 
                 reader.Close();
-                connection.Close();
+
             } catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
 
             return isFound;
         }
 
-        static void addNewContact(stContact stContact)
+        static void addNewContact(stContact contactInfo)
         {
             SqlConnection connection = new SqlConnection(connectionString);
 
@@ -224,12 +238,12 @@ namespace ConsoleApp2
                                 values (@firstname, @lastname, @email, @phone, @address, @countryid)";
 
             SqlCommand command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@firstname", stContact.firstName);
-            command.Parameters.AddWithValue("@lastname", stContact.lastName);
-            command.Parameters.AddWithValue("@email", stContact.email);
-            command.Parameters.AddWithValue("@phone", stContact.phone);
-            command.Parameters.AddWithValue("@address", stContact.address);
-            command.Parameters.AddWithValue("@countryid", stContact.countryID);
+            command.Parameters.AddWithValue("@firstname", contactInfo.firstName);
+            command.Parameters.AddWithValue("@lastname", contactInfo.lastName);
+            command.Parameters.AddWithValue("@email", contactInfo.email);
+            command.Parameters.AddWithValue("@phone", contactInfo.phone);
+            command.Parameters.AddWithValue("@address", contactInfo.address);
+            command.Parameters.AddWithValue("@countryid", contactInfo.countryID);
 
             try
             {
@@ -243,15 +257,17 @@ namespace ConsoleApp2
                 {
                     Console.WriteLine("Record Insertion FAILED!");
                 }
-
-                connection.Close();
-
-            } catch (Exception ex)
+            } 
+            catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
             }
+            finally
+            {
+                connection.Close();
+            }
         }
-        static void addNewContactAndGetID(stContact stContact)
+        static void addNewContactAndGetID(stContact contactInfo)
         {
             SqlConnection connection = new SqlConnection(connectionString);
 
@@ -260,12 +276,12 @@ namespace ConsoleApp2
                              select SCOPE_IDENTITY();";
 
             SqlCommand command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@firstname", stContact.firstName);
-            command.Parameters.AddWithValue("@lastname", stContact.lastName);
-            command.Parameters.AddWithValue("@email", stContact.email);
-            command.Parameters.AddWithValue("@phone", stContact.phone);
-            command.Parameters.AddWithValue("@address", stContact.address);
-            command.Parameters.AddWithValue("@countryid", stContact.countryID);
+            command.Parameters.AddWithValue("@firstname", contactInfo.firstName);
+            command.Parameters.AddWithValue("@lastname", contactInfo.lastName);
+            command.Parameters.AddWithValue("@email", contactInfo.email);
+            command.Parameters.AddWithValue("@phone", contactInfo.phone);
+            command.Parameters.AddWithValue("@address", contactInfo.address);
+            command.Parameters.AddWithValue("@countryid", contactInfo.countryID);
 
             try
             {
@@ -279,30 +295,77 @@ namespace ConsoleApp2
                 {
                     Console.WriteLine("Failed to Retreive the Inserted ID.");
                 }
-
-                connection.Close();
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
             }
+            finally
+            {
+                connection.Close();
+            }
         }
 
+        static void updateContact(int contactID, stContact contactInfo)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
 
+            string query = @"update contacts
+                                set firstname = @firstname,
+                                    lastname = @lastname,
+                                    email = @email,
+                                    phone = @phone,
+                                    address = @address,
+                                    countryid = @countryid
+                                where contactid = @contactid;";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@firstname", contactInfo.firstName);
+            command.Parameters.AddWithValue("@lastname", contactInfo.lastName);
+            command.Parameters.AddWithValue("@email", contactInfo.email);
+            command.Parameters.AddWithValue("@phone", contactInfo.phone);
+            command.Parameters.AddWithValue("@address", contactInfo.address);
+            command.Parameters.AddWithValue("@countryid", contactInfo.countryID);
+            command.Parameters.AddWithValue("@contactid", contactID);
+
+            try
+            {
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Record Updated SUCCESSFULLY!");
+                }
+                else
+                {
+                    Console.WriteLine("Record Update FAILED!");
+                }
+
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            } 
+            finally
+            {
+                connection.Close();
+            }
+        }
+        
         static void Main(string[] args)
         {
             stContact contactInfo = new stContact
             {
-                firstName = "Ibrahem",
-                lastName = "Mohammed",
-                email = "IbrahemM0123@gmail.com",
-                phone = "222331131313",
-                address = "555 Main Street",
+                firstName = "Aziz",
+                lastName = "Omar",
+                email = "Aziz1123@gmail.com",
+                phone = "455535426325",
+                address = "701 Main Street",
                 countryID = 2
             };
 
-            addNewContactAndGetID(contactInfo);
+            updateContact(2, contactInfo);
         }
     }
 }
