@@ -101,10 +101,47 @@ namespace ConsoleApp2
             }
         }
 
+        static void searchContactsStartWith(string startWith)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select * from contacts where firstname like '' + @startWith + '%'";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@startWith", startWith);
+
+            // print data ..
+        }
+        static void searchContactsEndWith(string endWith)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select * from contacts where firstname like '%' + @endWith + ''";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@endWith", endWith);
+
+            // print data ..
+        }
+        static void searchContactsContains(string contains)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select * from contacts where firstname like '%' + @contains + '%'";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@contains", contains);
+
+            // print data ..
+        }
+
         static void Main(string[] args)
         {
             printAllContacts();
             printAllContactsWithFirstName("jane");
+            //searchContactsStartWith("j");
+            //searchContactsEndWith("ne");
+            //searchContactsContains("ae");
         }
     }
 }
