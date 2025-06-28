@@ -251,20 +251,58 @@ namespace ConsoleApp2
                 Console.WriteLine("ERROR: " + ex.Message);
             }
         }
+        static void addNewContactAndGetID(stContact stContact)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = @"insert into contacts (firstname, lastname, email, phone, address, countryid) 
+                                values (@firstname, @lastname, @email, @phone, @address, @countryid);
+                             select SCOPE_IDENTITY();";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@firstname", stContact.firstName);
+            command.Parameters.AddWithValue("@lastname", stContact.lastName);
+            command.Parameters.AddWithValue("@email", stContact.email);
+            command.Parameters.AddWithValue("@phone", stContact.phone);
+            command.Parameters.AddWithValue("@address", stContact.address);
+            command.Parameters.AddWithValue("@countryid", stContact.countryID);
+
+            try
+            {
+                connection.Open();
+                object result = command.ExecuteScalar();
+
+                if (result != null && int.TryParse(result.ToString(), out int insertedID))
+                {
+                    Console.WriteLine("Newly Inserted ID: " + insertedID);
+                } else
+                {
+                    Console.WriteLine("Failed to Retreive the Inserted ID.");
+                }
+
+                connection.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+        }
+
 
         static void Main(string[] args)
         {
             stContact contactInfo = new stContact
             {
-                firstName = "Ahmed",
-                lastName = "Khaled",
-                email = "AhmedKhaled123@gmail.com",
-                phone = "44443332221",
-                address = "432 Main Street",
-                countryID = 1
+                firstName = "Ibrahem",
+                lastName = "Mohammed",
+                email = "IbrahemM0123@gmail.com",
+                phone = "222331131313",
+                address = "555 Main Street",
+                countryID = 2
             };
 
-            addNewContact(contactInfo);
+            addNewContactAndGetID(contactInfo);
         }
     }
 }
