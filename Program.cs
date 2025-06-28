@@ -216,23 +216,55 @@ namespace ConsoleApp2
             return isFound;
         }
 
+        static void addNewContact(stContact stContact)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = @"insert into contacts (firstname, lastname, email, phone, address, countryid) 
+                                values (@firstname, @lastname, @email, @phone, @address, @countryid)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@firstname", stContact.firstName);
+            command.Parameters.AddWithValue("@lastname", stContact.lastName);
+            command.Parameters.AddWithValue("@email", stContact.email);
+            command.Parameters.AddWithValue("@phone", stContact.phone);
+            command.Parameters.AddWithValue("@address", stContact.address);
+            command.Parameters.AddWithValue("@countryid", stContact.countryID);
+
+            try
+            {
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Record Inserted SUCCESSFULLY!");
+                } else
+                {
+                    Console.WriteLine("Record Insertion FAILED!");
+                }
+
+                connection.Close();
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+        }
+
         static void Main(string[] args)
         {
-            stContact contactInfo = new stContact();
+            stContact contactInfo = new stContact
+            {
+                firstName = "Ahmed",
+                lastName = "Khaled",
+                email = "AhmedKhaled123@gmail.com",
+                phone = "44443332221",
+                address = "432 Main Street",
+                countryID = 1
+            };
 
-            if (findContactByID(1, ref contactInfo))
-            {
-                Console.WriteLine("ContactID: " + contactInfo.ID);
-                Console.WriteLine("Firstname: " + contactInfo.firstName);
-                Console.WriteLine("LastName: " + contactInfo.lastName);
-                Console.WriteLine("Email: " + contactInfo.email);
-                Console.WriteLine("Phone: " + contactInfo.phone);
-                Console.WriteLine("Address: " + contactInfo.address);
-                Console.WriteLine("CountryID: " + contactInfo.countryID);
-            } else
-            {
-                Console.WriteLine("NOT FOUND!");
-            }
+            addNewContact(contactInfo);
         }
     }
 }
