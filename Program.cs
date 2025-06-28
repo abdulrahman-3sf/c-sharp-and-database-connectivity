@@ -164,7 +164,6 @@ namespace ConsoleApp2
                 {
                     firstName = result.ToString();
                 }
-
             } catch (Exception ex)
             {
                 Console.WriteLine("ERROR: ", ex.Message);
@@ -341,7 +340,6 @@ namespace ConsoleApp2
                 {
                     Console.WriteLine("Record Update FAILED!");
                 }
-
             } 
             catch (Exception ex)
             {
@@ -352,20 +350,43 @@ namespace ConsoleApp2
                 connection.Close();
             }
         }
+
+        static void deleteContact(int contactID)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = @"delete contacts where contactid = @contactid";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@contactid", contactID);
+
+            try
+            {
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Record Updated SUCCESSFULLY!");
+                }
+                else
+                {
+                    Console.WriteLine("Record Update FAILED!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
         
         static void Main(string[] args)
         {
-            stContact contactInfo = new stContact
-            {
-                firstName = "Aziz",
-                lastName = "Omar",
-                email = "Aziz1123@gmail.com",
-                phone = "455535426325",
-                address = "701 Main Street",
-                countryID = 2
-            };
-
-            updateContact(2, contactInfo);
+            deleteContact(4);
         }
     }
 }
