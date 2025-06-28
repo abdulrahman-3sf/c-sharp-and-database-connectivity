@@ -5,7 +5,7 @@ namespace ConsoleApp2
 {
     internal class Program
     {
-        static string connectionString = "Server=.;Database=ContactsDB;User Id=sa;Password=zzxxcc122";
+        static string connectionString = "Server=.;Database=ContactsDB;User Id=sa;Password=YOUR_DATABASE_PASSWORD";
 
         static void printAllContacts()
         {
@@ -135,13 +135,46 @@ namespace ConsoleApp2
             // print data ..
         }
 
+        static String getFirstName(int contactID)
+        {
+            string firstName = "";
+
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select firstname from contacts where contactid = @contactid";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@contactid", contactID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar(); // return single value, not like ExecuteReader() read all rows
+
+                if (result != null)
+                {
+                    firstName = result.ToString();
+                }
+
+                connection.Close();
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: ", ex.Message);
+            }
+
+            return firstName;
+        }
+
         static void Main(string[] args)
         {
-            printAllContacts();
-            printAllContactsWithFirstName("jane");
+            //printAllContacts();
+            //printAllContactsWithFirstName("jane");
             //searchContactsStartWith("j");
             //searchContactsEndWith("ne");
             //searchContactsContains("ae");
+            Console.WriteLine(getFirstName(1));
         }
     }
 }
