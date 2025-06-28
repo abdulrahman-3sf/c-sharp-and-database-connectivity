@@ -383,10 +383,41 @@ namespace ConsoleApp2
                 connection.Close();
             }
         }
+        static void deleteContacts(string contactIDs)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = @"delete contacts where contactid in (" + contactIDs + ")";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            try
+            {
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Record Updated SUCCESSFULLY!");
+                }
+                else
+                {
+                    Console.WriteLine("Record Update FAILED!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
         
         static void Main(string[] args)
         {
-            deleteContact(4);
+            deleteContacts("7,8,9");
         }
     }
 }
