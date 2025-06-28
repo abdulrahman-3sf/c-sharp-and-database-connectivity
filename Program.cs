@@ -167,14 +167,72 @@ namespace ConsoleApp2
             return firstName;
         }
 
+        public struct stContact
+        {
+            public int ID { get; set; }
+            public string firstName { get; set; }
+            public string lastName { get; set; }
+            public string email { get; set; }
+            public string phone { get; set; }
+            public string address { get; set; }
+            public int countryID { get; set; }
+        }
+        static bool findContactByID(int contactID, ref stContact contactInfo)
+        {
+            bool isFound = false;
+
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select * from contacts where contactid = @contactid";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@contactid", contactID);
+
+            try
+            {
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    isFound = true;
+
+                    contactInfo.ID = (int)reader["contactid"];
+                    contactInfo.firstName = (string)reader["firstname"];
+                    contactInfo.lastName = (string)reader["lastname"];
+                    contactInfo.email = (string)reader["email"];
+                    contactInfo.phone = (string)reader["phone"];
+                    contactInfo.address = (string)reader["address"];
+                    contactInfo.countryID = (int)reader["countryid"];
+                }
+
+                reader.Close();
+                connection.Close();
+            } catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+
+            return isFound;
+        }
+
         static void Main(string[] args)
         {
-            //printAllContacts();
-            //printAllContactsWithFirstName("jane");
-            //searchContactsStartWith("j");
-            //searchContactsEndWith("ne");
-            //searchContactsContains("ae");
-            Console.WriteLine(getFirstName(1));
+            stContact contactInfo = new stContact();
+
+            if (findContactByID(1, ref contactInfo))
+            {
+                Console.WriteLine("ContactID: " + contactInfo.ID);
+                Console.WriteLine("Firstname: " + contactInfo.firstName);
+                Console.WriteLine("LastName: " + contactInfo.lastName);
+                Console.WriteLine("Email: " + contactInfo.email);
+                Console.WriteLine("Phone: " + contactInfo.phone);
+                Console.WriteLine("Address: " + contactInfo.address);
+                Console.WriteLine("CountryID: " + contactInfo.countryID);
+            } else
+            {
+                Console.WriteLine("NOT FOUND!");
+            }
         }
     }
 }
