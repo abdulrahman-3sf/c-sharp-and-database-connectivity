@@ -53,9 +53,58 @@ namespace ConsoleApp2
             }
         }
 
+        static void printAllContactsWithFirstName(string firstName)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+
+            string query = "select * from contacts where firstname = @firstname";
+
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@firstname", firstName);
+
+            try
+            {
+                connection.Open();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                int contactID, countryID;
+                string firstName2, lastName, email, phone, address;
+
+                while (reader.Read())
+                {
+                    contactID = (int)reader["ContactID"];
+                    firstName2 = (string)reader["FirstName"];
+                    lastName = (string)reader["LastName"];
+                    email = (string)reader["Email"];
+                    phone = (string)reader["Phone"];
+                    address = (string)reader["Address"];
+                    countryID = (int)reader["CountryID"];
+
+                    Console.WriteLine("ContactID " + contactID);
+                    Console.WriteLine("FirstName " + firstName);
+                    Console.WriteLine("LastName " + lastName);
+                    Console.WriteLine("Email " + email);
+                    Console.WriteLine("Phone " + phone);
+                    Console.WriteLine("Address " + address);
+                    Console.WriteLine("CountryID " + countryID);
+                    Console.WriteLine();
+                }
+
+                reader.Close();
+                connection.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+            }
+        }
+
         static void Main(string[] args)
         {
             printAllContacts();
+            printAllContactsWithFirstName("jane");
         }
     }
 }
