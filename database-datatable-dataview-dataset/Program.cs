@@ -79,6 +79,25 @@ namespace database_datatable_dataview_dataset
                 Console.WriteLine($"ID: {recordRow["ID"]},\tName: {recordRow["Name"]},\t\tCountry: {recordRow["Country"]}");
             }
 
+
+            // Delete Row
+            filter = "ID=4";
+            resultRows = employeeDT.Select(filter);
+
+            foreach (DataRow recordRow in resultRows)
+            {
+                recordRow.Delete();
+            }
+
+            // This for sync with the database after delete, but we offline so we don't need it.
+            // employeeDT.AcceptChanges();
+
+            Console.WriteLine("\n\n------- After delete row with ID = 4 -------");
+
+            foreach (DataRow recordRow in employeeDT.Rows)
+            {
+                Console.WriteLine($"ID: {recordRow["ID"]},\tName: {recordRow["Name"]},\t\tCountry: {recordRow["Country"]}");
+            }
         }
     }
 }
