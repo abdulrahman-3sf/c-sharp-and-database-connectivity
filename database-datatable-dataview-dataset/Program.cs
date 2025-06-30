@@ -39,6 +39,33 @@ namespace database_datatable_dataview_dataset
             Console.WriteLine("Average Employees Salaries: " + avgSalaries);
             Console.WriteLine("Minimum Salary: " + minSalary);
             Console.WriteLine("Maximum Salary: " + maxSalary);
+
+
+            // string filter = "Country='Saudi Arabia' or Country='Jordan'";
+            // string filter = "ID=1";
+
+            // Filter by country Saudi Arabia
+            string filter = "Country='Saudi Arabia'";
+            DataRow[] resultRows = employeeDT.Select(filter);
+
+            int resultCount = resultRows.Count();
+            totalSalaries = Convert.ToDouble(employeeDT.Compute("SUM(Salary)", filter));
+            avgSalaries = Convert.ToDouble(employeeDT.Compute("AVG(Salary)", filter));
+            minSalary = Convert.ToDouble(employeeDT.Compute("MIN(Salary)", filter));
+            maxSalary = Convert.ToDouble(employeeDT.Compute("MAX(Salary)", filter));
+
+            Console.WriteLine("\n\n------- Filter by Country Saudi Arabia -------");
+
+            foreach (DataRow recordRow in resultRows)
+            {
+                Console.WriteLine($"ID: {recordRow["ID"]},\tName: {recordRow["Name"]},\t\tCountry: {recordRow["Country"]}");
+            }
+
+            Console.WriteLine("\nCount of Employees: " + resultCount);
+            Console.WriteLine("Total Employees Salaries: " + totalSalaries);
+            Console.WriteLine("Average Employees Salaries: " + avgSalaries);
+            Console.WriteLine("Minimum Salary: " + minSalary);
+            Console.WriteLine("Maximum Salary: " + maxSalary);
         }
     }
 }
