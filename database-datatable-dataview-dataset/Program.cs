@@ -17,6 +17,10 @@ namespace database_datatable_dataview_dataset
             employeeDT.Columns.Add("Salary", typeof(Double));
             employeeDT.Columns.Add("Date", typeof(DateTime));
 
+            DataColumn[] primaryKeyColumns = new DataColumn[1];
+            primaryKeyColumns[0] = employeeDT.Columns["ID"];
+            employeeDT.PrimaryKey = primaryKeyColumns;
+
             employeeDT.Rows.Add(1, "Ayman", "Syria", 60000, DateTime.Now);
             employeeDT.Rows.Add(2, "Ahmed", "Saudi Arabia", 22222, DateTime.Now);
             employeeDT.Rows.Add(3, "Fasil", "Jordan", 13030, DateTime.Now);
@@ -122,7 +126,10 @@ namespace database_datatable_dataview_dataset
 
 
             // Clear Data
-            employeeDT.Clear();
+            // employeeDT.Clear();
+
+
+
         }
     }
 }
