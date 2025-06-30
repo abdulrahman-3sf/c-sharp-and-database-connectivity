@@ -46,6 +46,16 @@ namespace database_datatable_dataview_dataset
             {
                 Console.WriteLine($"ID: {employeeDV[i][0]},\tName: {employeeDV[i][1]},\t\tCountry: {employeeDV[i][2]}");
             }
+
+
+            // Sort on DataView
+            employeeDV.Sort = "Name asc";
+
+            Console.WriteLine("\n\n------- Sort by Name asc on DataView -------");
+            for (int i = 0; i < employeeDV.Count; i++)
+            {
+                Console.WriteLine($"ID: {employeeDV[i][0]},\tName: {employeeDV[i][1]},\t\tCountry: {employeeDV[i][2]}");
+            }
         }
     }
 }
