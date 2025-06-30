@@ -11,21 +11,48 @@ namespace database_datatable_dataview_dataset
             // Like Database in memory.
 
             DataTable employeeDT = new DataTable();
-            employeeDT.Columns.Add("ID", typeof(int));
-            employeeDT.Columns.Add("Name", typeof(string));
+
+            // Way one to add columns
+            //employeeDT.Columns.Add("ID", typeof(int));
+            //employeeDT.Columns.Add("Name", typeof(string));
             employeeDT.Columns.Add("Country", typeof(string));
             employeeDT.Columns.Add("Salary", typeof(Double));
             employeeDT.Columns.Add("Date", typeof(DateTime));
+
+            // Second way to add columns (more better)
+            DataColumn dataColumn = new DataColumn();
+
+            // For ID
+            dataColumn.DataType = typeof(int);
+            dataColumn.ColumnName = "ID";
+            dataColumn.AutoIncrement = true;
+            dataColumn.AutoIncrementSeed = 1;
+            dataColumn.AutoIncrementStep = 1;
+            dataColumn.Caption = "Employee ID";
+            dataColumn.ReadOnly = true;
+            dataColumn.Unique = true;
+            employeeDT.Columns.Add(dataColumn);
+
+            // For Name
+            dataColumn = new DataColumn();
+            dataColumn.DataType = typeof(string);
+            dataColumn.ColumnName = "Name";
+            dataColumn.AutoIncrement = false;
+            dataColumn.Caption = "Employee Name";
+            dataColumn.ReadOnly = false;
+            dataColumn.Unique = false;
+            employeeDT.Columns.Add(dataColumn);
 
             DataColumn[] primaryKeyColumns = new DataColumn[1];
             primaryKeyColumns[0] = employeeDT.Columns["ID"];
             employeeDT.PrimaryKey = primaryKeyColumns;
 
-            employeeDT.Rows.Add(1, "Ayman", "Syria", 60000, DateTime.Now);
-            employeeDT.Rows.Add(2, "Ahmed", "Saudi Arabia", 22222, DateTime.Now);
-            employeeDT.Rows.Add(3, "Fasil", "Jordan", 13030, DateTime.Now);
-            employeeDT.Rows.Add(4, "Mohammed", "Egypt", 3300, DateTime.Now);
-            employeeDT.Rows.Add(5, "Khaled", "Saudi Arabia", 55500, DateTime.Now);
+            // We put the ID null because it's auto increment
+            employeeDT.Rows.Add(null, "Ayman", "Syria", 60000, DateTime.Now);
+            employeeDT.Rows.Add(null, "Ahmed", "Saudi Arabia", 22222, DateTime.Now);
+            employeeDT.Rows.Add(null, "Fasil", "Jordan", 13030, DateTime.Now);
+            employeeDT.Rows.Add(null, "Mohammed", "Egypt", 3300, DateTime.Now);
+            employeeDT.Rows.Add(null, "Khaled", "Saudi Arabia", 55500, DateTime.Now);
 
             int employeesCount = employeeDT.Rows.Count;
             double totalSalaries = Convert.ToDouble(employeeDT.Compute("SUM(Salary)", string.Empty));
