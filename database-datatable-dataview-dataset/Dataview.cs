@@ -36,6 +36,16 @@ namespace database_datatable_dataview_dataset
             {
                 Console.WriteLine($"ID: {employeeDV[i][0]},\tName: {employeeDV[i][1]},\t\tCountry: {employeeDV[i][2]}");
             }
+
+
+            // Filter on DataView
+            employeeDV.RowFilter = "Country = 'Saudi Arabia'";
+
+            Console.WriteLine("\n\n------- Filter by Country on DataView -------");
+            for (int i = 0; i < employeeDV.Count; i++)
+            {
+                Console.WriteLine($"ID: {employeeDV[i][0]},\tName: {employeeDV[i][1]},\t\tCountry: {employeeDV[i][2]}");
+            }
         }
     }
 }
