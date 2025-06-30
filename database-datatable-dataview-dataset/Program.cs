@@ -66,6 +66,19 @@ namespace database_datatable_dataview_dataset
             Console.WriteLine("Average Employees Salaries: " + avgSalaries);
             Console.WriteLine("Minimum Salary: " + minSalary);
             Console.WriteLine("Maximum Salary: " + maxSalary);
+
+
+            // Sort Data
+            employeeDT.DefaultView.Sort = "ID desc";
+            employeeDT = employeeDT.DefaultView.ToTable();
+
+            Console.WriteLine("\n\n------- Sorted by ID desc -------");
+
+            foreach (DataRow recordRow in employeeDT.Rows)
+            {
+                Console.WriteLine($"ID: {recordRow["ID"]},\tName: {recordRow["Name"]},\t\tCountry: {recordRow["Country"]}");
+            }
+
         }
     }
 }
