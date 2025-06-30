@@ -119,6 +119,10 @@ namespace database_datatable_dataview_dataset
             {
                 Console.WriteLine($"ID: {recordRow["ID"]},\tName: {recordRow["Name"]},\t\tCountry: {recordRow["Country"]},\t\tSalary: {recordRow["Salary"]}");
             }
+
+
+            // Clear Data
+            employeeDT.Clear();
         }
     }
 }
